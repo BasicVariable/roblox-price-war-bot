@@ -1,0 +1,9 @@
+{
+    "accounts": [""],
+    "selling": {
+        "check_interval": 5,
+        "max_increments": 150,
+        "sellUntil_X_UnderRap": 100
+    },
+    "account_update_interval": 15
+}
