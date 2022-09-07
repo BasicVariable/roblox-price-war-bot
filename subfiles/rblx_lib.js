@@ -45,8 +45,8 @@ async function scrape_itemData(itemId, cookie){
 
         let text = await res.text();
         //---
-        var price = parseInt(await text.split(`data-expected-price="`)[1].split('"')[0]);
-        var sellerId = parseInt(await text.split(`data-expected-seller-id="`)[1].split('"')[0]);
+        var price = parseInt((await text.split(`data-expected-price="`)[1].split('"')[0]).replace(/[^0-9.]/g,""));
+        var sellerId = parseInt((await text.split(`data-expected-seller-id="`)[1].split('"')[0]).replace(/[^0-9.]/g,""));
         var ownsItem = text.includes(`<span class="icon-checkmark-white-bold"></span>`)
         //---
 
