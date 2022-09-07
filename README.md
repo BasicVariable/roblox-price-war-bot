@@ -2,12 +2,12 @@
 
 This bot DOESNT use rolimons.com for prices and only Roblox's recent average price, if you have valued items you'd like to price war use with caution.
 
-If you have a suggestion make one in my discord server (discord.gg/callie)
+If you have a suggestion, for my code or a feature, make one in my discord server (discord.gg/callie)
 
 Going back to making open source projects, I think my code has improved a ton since I made IslandAds. 
 Commissioned by Noki#1939, made by Basic#2142. 
 
-**If you'd like to have something completed join discord.gg/callie**
+**If you'd like to have something commissioned join discord.gg/callie and make a ticket**
 
 # Installation / Usage
 
