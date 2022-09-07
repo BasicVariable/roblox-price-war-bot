@@ -13,7 +13,7 @@ Commissioned by Noki#1939, made by Basic#2142.
 
 Running the bot can be very simple:
 
-you can either use the EXE (the "built" version) of this bot in the "compiled" folder 
+you can either use the EXE (the "built" version) of this bot in that's in RPWB.zip
 
 or
 
