@@ -49,6 +49,7 @@ async function scrape_itemData(itemId, cookie){
         var sellerId = parseInt((await text.split(`data-expected-seller-id="`)[1].split('"')[0]).replace(/[^0-9.]/g,""));
         var ownsItem = text.includes(`<span class="icon-checkmark-white-bold"></span>`)
         //---
+        if (price == null || sellerId == null || ownsItem == null){await delay(1500); continue};
 
         fixedData={currentPrice: price, currentSeller: sellerId, ownershipStatus: ownsItem}
     }
