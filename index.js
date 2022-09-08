@@ -62,7 +62,7 @@ new Promise(async () => {
         new Promise(async () => {
             await delay(60000);
             let newestValues = await rblx_lib.get_values();
-            if (newestValues!=null) global.rolimonsValues=await get_values();
+            if (newestValues!=null) global.rolimonsValues=newestValues;
         })
     };
 

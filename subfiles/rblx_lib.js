@@ -12,8 +12,22 @@ async function get_values(){
         }).catch((err) => properoutput(`Failed to connect to /itemdetails\n${err}`.red, true));
         if (res.status!=200) {await delay(5000); trys++; continue};
 
-        let json = await res.json();
-        if (json.success==true) return json.items;
+        var json = await res.json();
+
+        if (json['success']!=true) {await delay(5000); trys++; continue};
+        if (global['rolimonsValues']==null) {return json.items}; // checks if it's the first time making the req
+
+        // pretty meh lpp check but, I can't really host a server to make a rap db and then avg rap since this is free-
+        for (id in json.items){
+            let item = json.items[id]
+
+            if (item[3]>-1) continue; // checks if it's valued
+
+            // if it decreases by 40%+ it'll use the old value
+            if ((item[4]-rolimonsValues[id][4])/rolimonsValues[id][4]<=-0.40) json.items[id]=rolimonsValues[id];
+        }
+
+        return json.items;
     };
 }
 
