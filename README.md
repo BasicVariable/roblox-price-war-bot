@@ -1,6 +1,6 @@
 # Notes
 
-Reminder: If you have valued items you want to price war, set 'use_Rolimons' to true in the config
+**Reminder: If you have valued items you want to price war, set 'use_Rolimons' to true in the config**
 
 If you have a suggestion, for my code or a feature, make one in my discord server (discord.gg/callie)
 
