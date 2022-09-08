@@ -13,5 +13,8 @@
   "keywords": [],
   "author": "Basic#2142",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "bin": {
+    "pkg": "index.js"
+  }
 }

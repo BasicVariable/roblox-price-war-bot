@@ -2,8 +2,9 @@
     "accounts": [""],
     "selling": {
         "check_interval": 5,
-        "max_increments": 150,
-        "sellUntil_X_UnderRap": 100
+        "max_increments": 50,
+        "sellUntil_X_UnderRap": 10
     },
+    "use_Rolimons": true,
     "account_update_interval": 15
 }

@@ -4,17 +4,29 @@
 const fetch = require("node-fetch");  
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
+async function get_values(){
+    var trys=0
+    while (trys<=4){
+        let res = await fetch(`https://www.rolimons.com/itemapi/itemdetails`, {
+            headers: {'content-type': 'application/json;charset=UTF-8'}
+        }).catch((err) => properoutput(`Failed to connect to /itemdetails\n${err}`.red, true));
+        if (res.status!=200) {await delay(5000); trys++; continue};
+
+        let json = await res.json();
+        if (json.success==true) return json.items;
+    };
+}
+
 async function auth_account(cookie){
-    var json; var trys=0
-    while (json==null && trys<=3){
+    var trys=0
+    while (trys<=3){
         let res = await fetch("https://users.roblox.com/v1/users/authenticated", {
             headers: {'Content-Type': 'application/json',"cookie": ".ROBLOSECURITY="+cookie}
         }).catch((err) => properoutput(`Failed to connect to /authenticated\n${err}`.red, true));
         if (res.status!=200) {trys++; continue};
-        json=await res.json();
-    }
 
-    return json;
+        return await res.json();
+    };
 }
 
 async function get_inventory(userId){
@@ -28,7 +40,7 @@ async function get_inventory(userId){
         if (res.status!=200) {await delay(5000); continue}; 
 
         let json = await res.json(); 
-        await json.data.forEach(item => fixed_inv.push({userAssetId: item.userAssetId, name: item.name, assetId: item.assetId, rap: item.recentAveragePrice}));
+        await json.data.forEach(item => fixed_inv.push({userAssetId: item.userAssetId, name: item.name, assetId: item.assetId, rap: (global['rolimonsValues']!=null)?rolimonsValues[item.assetId][4]:item.recentAveragePrice}));
 
         if (json.nextPageCursor==null) {cursor=null; continue};
         cursor=`&cursor=${json.nextPageCursor}`;
@@ -38,8 +50,8 @@ async function get_inventory(userId){
 }
 
 async function scrape_itemData(itemId, cookie){
-    var fixedData; var trys=0
-    while (fixedData==null && trys<=4){
+    var trys=0
+    while (trys<=4){
         let res = await fetch(`https://www.roblox.com/catalog/${itemId}`, {headers: {"cookie": ".ROBLOSECURITY="+cookie}}).catch((err) => properoutput(`Failed to connect to /catalog\n${err}`.red, true));;
         if (res.status!=200) {await delay(1500); continue}; 
 
@@ -51,28 +63,27 @@ async function scrape_itemData(itemId, cookie){
         //---
         if (price == null || sellerId == null || ownsItem == null){await delay(1500); continue};
 
-        fixedData={currentPrice: price, currentSeller: sellerId, ownershipStatus: ownsItem}
-    }
-
-    return fixedData;
+        return {currentPrice: price, currentSeller: sellerId, ownershipStatus: ownsItem}
+    };
 }
 
 const get_csrfToken = async function(cookie){
-    var token; var trys=0;
-    while (token==null && trys<=4){
+    var trys=0
+    while (trys<=4){
         let res = await fetch("https://auth.roblox.com/v1/xbox/disconnect", {
             method: "POST",
             headers: {'content-type': 'application/json;charset=UTF-8',"cookie": ".ROBLOSECURITY="+cookie}
         }).catch((err) => properoutput(`Failed to connect to /disconnect\n${err}`.red, true));
-        token = await res.headers.get("x-csrf-token");
+
+        let token = await res.headers.get("x-csrf-token");
         if (token==null) {await delay(5000); trys++; continue}
-    }
-    
-    return token;
+
+        return token;
+    };
 }
 
 async function setPrice(itemId, uaid, price, cookie){
-    var trys=0;
+    var trys=0
     while (trys<=4){
         let res = await fetch(`https://economy.roblox.com/v1/assets/${itemId}/resellable-copies/${uaid}`, {
             method: 'PATCH',
@@ -87,4 +98,4 @@ async function setPrice(itemId, uaid, price, cookie){
     properoutput(`Listed ${itemId}/${uaid} for ${price}`.green)
 }
 
-module.exports = {auth_account, get_inventory, scrape_itemData, setPrice}
+module.exports = {auth_account, get_inventory, scrape_itemData, setPrice, get_values}

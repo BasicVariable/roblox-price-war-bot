@@ -26,6 +26,7 @@ const rblx_lib = require('./subfiles/rblx_lib.js')
 
 var config; 
 var accounts = [];
+var currentUserids = [];
 
 // functions
 global.properoutput = function(message, err, secondary){
@@ -39,6 +40,7 @@ async function tryAccount(cookie){
 
     let inventory = await rblx_lib.get_inventory(accountInfo.id); // [{userAssetId: 0, name: '', assetId: 0, rap: 0}]
 
+    currentUserids.push(accountInfo.id)
     return {userInfo: accountInfo, items: inventory, cookie: cookie}
 };
 //
@@ -55,6 +57,15 @@ properoutput('Got your config'.green, false, true);
 
 properoutput('Setting up the bot'.yellow);
 new Promise(async () => {
+    if (config.use_Rolimons==true) {
+        global.rolimonsValues=await rblx_lib.get_values()
+        new Promise(async () => {
+            await delay(60000);
+            let newestValues = await rblx_lib.get_values();
+            if (newestValues!=null) global.rolimonsValues=await get_values();
+        })
+    };
+
     for (cookie of config.accounts){
         let res = await tryAccount(cookie);
         if (res!=null) {
@@ -94,7 +105,7 @@ new Promise(async () => {
                 if (scrapedInfo==null) break; // not sure if it would ever return as null but, if a cookie dies or something it'll just break and give the acc updater a chance later
 
                 if (scrapedInfo.ownershipStatus!=true) {account.items.splice(i, 1); continue}; // still no idea if the array will do something weird 
-                if (scrapedInfo.sellerId==account.userInfo.id) {listed.push(item.assetId); continue};
+                if (currentUserids.includes(scrapedInfo.currentSeller)) {listed.push(item.assetId); continue};
 
                 // I'm not going to make a thread worker for this because Noki wanted low ram usage and it would be another process so
                 if ((item.rap-config.selling.sellUntil_X_UnderRap) > scrapedInfo.currentPrice-config.selling.max_increments){
