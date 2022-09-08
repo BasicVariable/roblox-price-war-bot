@@ -1,6 +1,6 @@
 # Notes
 
-This bot DOESNT use rolimons.com for prices and only Roblox's recent average price, if you have valued items you'd like to price war use with caution.
+Reminder: If you have valued items you want to price war, set 'use_Rolimons' to true in the config
 
 If you have a suggestion, for my code or a feature, make one in my discord server (discord.gg/callie)
 
@@ -13,13 +13,9 @@ Commissioned by Noki#1939, made by Basic#2142.
 
 Running the bot can be very simple:
 
-you can either use the EXE (the "built" version) of this bot in that's in RPWB.zip
-
-or
-
 1. Install node.js through https://nodejs.org/en/
 2. Download the source
-3. Open command prompt in the directory of index.js
+3. Open a command prompt window in the directory of the 'index.js' file
 4. Run this command: 
 ```npm install```
 5. Run this command:
@@ -40,6 +36,9 @@ The max amount of Robux the bot will lower an item's best price to counter someo
 
 selling > :: sellUntil_X_UnderRap ::
 How low the best price can go under an item's RAP (recent average price)
+
+:: use_Rolimons ::
+Enabling this, by setting it to true, will make the bot use Rolimon's values when price war-ing instead of just RAP
 
 :: account_update_interval ::
 The amount of time, in seconds, the bot will wait before refreshing all your accounts inventories/information
