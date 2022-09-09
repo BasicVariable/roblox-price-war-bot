@@ -28,6 +28,9 @@ Running the bot can be very simple:
 A list (array) of cookies you want the bot to look through for limiteds to sell for Robux
 "accounts": ["cookie", "cookie", "cookie"]
 
+:: sale_webhook ::
+A discord webhook URL, if the URL PWB will continue listing items. If it is valid item sales will be posted in your discord channel.
+
 selling > :: check_interval ::
 The number of seconds the bot will wait before starting the price war-ing process again
 
@@ -36,9 +39,6 @@ The max amount of Robux the bot will lower an item's best price to counter someo
 
 selling > :: sellUntil_X_UnderRap ::
 How low the best price can go under an item's RAP (recent average price)
-
-:: use_Rolimons ::
-Enabling this, by setting it to true, will make the bot use Rolimon's values when price war-ing instead of just RAP
 
 :: account_update_interval ::
 The amount of time, in seconds, the bot will wait before refreshing all your accounts inventories/information
