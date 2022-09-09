@@ -22,6 +22,7 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 
 //-----
 const rblx_lib = require('./subfiles/rblx_lib.js')
+const webhook = require('./subfiles/webhook.js')
 //-----
 
 var config; 
@@ -57,14 +58,15 @@ properoutput('Got your config'.green, false, true);
 
 properoutput('Setting up the bot'.yellow);
 new Promise(async () => {
-    if (config.use_Rolimons==true) {
-        global.rolimonsValues=await rblx_lib.get_values()
-        new Promise(async () => {
-            await delay(60000);
-            let newestValues = await rblx_lib.get_values();
-            if (newestValues!=null) global.rolimonsValues=newestValues;
-        })
-    };
+
+    await webhook.checkWebhook(config.sale_webhook)
+
+    global.rolimonsValues=await rblx_lib.get_values()
+    new Promise(async () => {
+        await delay(60000);
+        let newestValues = await rblx_lib.get_values();
+        if (newestValues!=null) global.rolimonsValues=newestValues;
+    })
 
     for (cookie of config.accounts){
         let res = await tryAccount(cookie);
@@ -85,6 +87,25 @@ new Promise(async () => {
 
                 if (newInfo!=null) accounts[i]=newInfo; else accounts.splice(i, 1); // no idea if the array will do something weird 
             }
+        }
+    })
+
+    var lastSaleCheck = {};
+    new Promise(async () => {
+        // Sale detector
+        while (true){
+            for (acc of accounts){
+                if (lastSaleCheck[acc.userInfo.id]==null) {lastSaleCheck[acc.userInfo.id]=Date.now(); continue}
+
+                let latestSales = await rblx_lib.getRecentSales(acc.cookie, acc.userInfo.id, lastSaleCheck[acc.userInfo.id])
+                if (latestSales==null || latestSales.length<=0) continue;
+
+                for (sale of latestSales) await webhook.postSale(sale); // see ./subfiles/webhook.js (there is a check for a webhook there)
+
+                lastSaleCheck[acc.userInfo.id]=Date.now()
+            }
+
+            await delay(6000)
         }
     })
 

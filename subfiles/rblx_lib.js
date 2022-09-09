@@ -109,7 +109,23 @@ async function setPrice(itemId, uaid, price, cookie){
         break;
     }
 
-    properoutput(`Listed ${itemId}/${uaid} for ${price}`.green)
+    properoutput(`Listed ${itemId}/${uaid} for ${price}`.yellow)
 }
 
-module.exports = {auth_account, get_inventory, scrape_itemData, setPrice, get_values}
+async function getRecentSales(cookie, userId, lastCheck){
+    var trys=0
+    while (trys<=4){
+        let res = await fetch(`https://economy.roblox.com/v2/users/${userId}/transactions?transactionType=Sale&limit=20`, {
+            headers: {'content-type': 'application/json;charset=UTF-8', "cookie": ".ROBLOSECURITY="+cookie}
+        }).catch((err) => properoutput(`Failed to connect to /transactions\n${err}`.red, true));
+        if (res==null || res.status!=200) {await delay(10000); trys++; continue}; // dk the ratelimit
+
+
+        let fixedJson = await (await res.json()).filter(sale => rolimonsValues[sale.details.id]!=null); // Gets all the limited ones (await hell)
+        let newestSales = fixedJson.filter(sale => (new Date(sale.created)).getTime() >= lastCheck); // Gets all sales that happened after the last check
+
+        return newestSales
+    }
+}
+
+module.exports = {auth_account, get_inventory, scrape_itemData, setPrice, get_values, getRecentSales}
