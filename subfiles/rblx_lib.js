@@ -10,7 +10,7 @@ async function get_values(){
         let res = await fetch(`https://www.rolimons.com/itemapi/itemdetails`, {
             headers: {'content-type': 'application/json;charset=UTF-8'}
         }).catch((err) => properoutput(`Failed to connect to /itemdetails\n${err}`.red, true));
-        if (res.status!=200) {await delay(5000); trys++; continue};
+        if (res==null || res.status!=200) {await delay(5000); trys++; continue};
 
         var json = await res.json();
 
@@ -37,7 +37,7 @@ async function auth_account(cookie){
         let res = await fetch("https://users.roblox.com/v1/users/authenticated", {
             headers: {'Content-Type': 'application/json',"cookie": ".ROBLOSECURITY="+cookie}
         }).catch((err) => properoutput(`Failed to connect to /authenticated\n${err}`.red, true));
-        if (res.status!=200) {trys++; continue};
+        if (res==null || res.status!=200) {trys++; continue};
 
         return await res.json();
     };
@@ -51,7 +51,7 @@ async function get_inventory(userId){
             headers: {'Content-Type': 'application/json'}
         }).catch((err) => properoutput(`Failed to connect to /collectibles\n${err}`.red, true));
         // if this has issues with it getting stuck on one acc in the future I'll add a check for it :eyeroll:
-        if (res.status!=200) {await delay(5000); continue}; 
+        if (res==null || res.status!=200) {await delay(5000); continue}; 
 
         let json = await res.json(); 
         await json.data.forEach(item => fixed_inv.push({userAssetId: item.userAssetId, name: item.name, assetId: item.assetId, rap: (global['rolimonsValues']!=null)?rolimonsValues[item.assetId][4]:item.recentAveragePrice}));
@@ -67,7 +67,7 @@ async function scrape_itemData(itemId, cookie){
     var trys=0
     while (trys<=4){
         let res = await fetch(`https://www.roblox.com/catalog/${itemId}`, {headers: {"cookie": ".ROBLOSECURITY="+cookie}}).catch((err) => properoutput(`Failed to connect to /catalog\n${err}`.red, true));;
-        if (res.status!=200) {await delay(1500); continue}; 
+        if (res==null || res.status!=200) {await delay(1500); continue}; 
 
         let text = await res.text();
         //---
@@ -104,7 +104,7 @@ async function setPrice(itemId, uaid, price, cookie){
             body: JSON.stringify({price: price}),
             headers: {'content-type': 'application/json;charset=UTF-8', "cookie": ".ROBLOSECURITY="+cookie, "x-csrf-token": await get_csrfToken(cookie)}
         }).catch((err) => properoutput(`Failed to connect to /resellable-copies\n${err}`.red, true));
-        if (res.status!=200) {await delay(5000); trys++; continue}; // don't know the ratelimit sorry
+        if (res==null || res.status!=200) {await delay(5000); trys++; continue}; // don't know the ratelimit sorry
 
         break;
     }
